@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pxc-cluster-pv0
+  namespace: mobility-asia
+  labels: 
+    storage-pv: pxc-cluster-pv0
+spec:
+  capacity:
+    storage: 1Gi  
+  accessModes:
+  - ReadWriteMany
+  nfs: 
+    path: /export/vmimage/DevLib/poc-pv/vgc/mysql-cluster/pxc-cluster-pv0
+    server: 172.20.6.3
+  persistentVolumeReclaimPolicy: Retain
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pxc-storage-galera-mysql-0
+  namespace: mobility-asia
+spec:
+  accessModes:
+  - ReadWriteMany
+  selector: 
+    matchLabels:
+      storage-pv: pxc-cluster-pv0
+  resources:
+     requests:
+       storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pxc-cluster-pv1
+  namespace: mobility-asia
+  labels: 
+    storage-pv: pxc-cluster-pv1
+spec:
+  capacity:
+    storage: 1Gi  
+  accessModes:
+  - ReadWriteMany
+  nfs: 
+    path: /export/vmimage/DevLib/poc-pv/vgc/mysql-cluster/pxc-cluster-pv1
+    server: 172.20.6.3
+  persistentVolumeReclaimPolicy: Retain
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pxc-storage-galera-mysql-1
+  namespace: mobility-asia
+spec:
+  accessModes:
+  - ReadWriteMany
+  selector: 
+    matchLabels:
+      storage-pv: pxc-cluster-pv1
+  resources:
+     requests:
+       storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pxc-cluster-pv2
+  namespace: mobility-asia
+  labels: 
+    storage-pv: pxc-cluster-pv2
+spec:
+  capacity:
+    storage: 1Gi  
+  accessModes:
+  - ReadWriteMany
+  nfs: 
+    path: /export/vmimage/DevLib/poc-pv/vgc/mysql-cluster/pxc-cluster-pv2
+    server: 172.20.6.3
+  persistentVolumeReclaimPolicy: Retain
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pxc-storage-galera-mysql-2
+  namespace: mobility-asia
+spec:
+  accessModes:
+  - ReadWriteMany
+  selector: 
+    matchLabels:
+      storage-pv: pxc-cluster-pv2
+  resources:
+     requests:
+       storage: 1Gi

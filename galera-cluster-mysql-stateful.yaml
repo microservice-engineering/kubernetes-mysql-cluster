@@ -1,0 +1,55 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: galera-mysql
+  namespace: mobility-asia
+spec:
+  serviceName: "pxc-cluster"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        node: pxc-node
+        unit: pxc-cluster
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: pxc-mysql
+        image: mycluster.icp:8500/vgc-parking-dev/galera-mysql:0.1
+        ports:
+          - containerPort: 3306
+          - containerPort: 4444
+          - containerPort: 4567
+          - containerPort: 4568
+        env:
+          - name: GALERA_CLUSTER
+            value: "true"
+          - name: WSREP_CLUSTER_ADDRESS
+            value: gcomm://
+          - name: WSREP_SST_USER
+            value: sst
+          - name: WSREP_SST_PASSWORD
+            value: sst
+          - name: MYSQL_USER
+            value: mysql
+          - name: MYSQL_PASSWORD
+            value: mysql
+          - name: MYSQL_ROOT_PASSWORD
+            value: c-krit
+        volumeMounts:
+        - name: pxc-storage
+          mountPath: /var/lib/mysql
+      imagePullSecrets:
+      - name: vgc-parking-dev
+  # Define your own volumeClaimTemplate. This example uses dynamic PV provisioning with a storage class named "standard" (so it will works by default with minikube)
+  # In production you should use your own defined storage-class and configure your persistent volumes (statically or dynamically using a provisioner, see related k8s doc).
+  volumeClaimTemplates:
+  - metadata:
+      name: pxc-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
